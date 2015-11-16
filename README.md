@@ -1,5 +1,10 @@
 ﻿# static-mailer
 
+Exira.StaticMailer is a REST endpoint running in a Windows Service to enable static sites to easily send mail.
+
+## Usage
+
+
 
 ## Cloning
 

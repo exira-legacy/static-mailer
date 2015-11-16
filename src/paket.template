@@ -1,0 +1,29 @@
+type project
+id
+    Exira.StaticMailer
+owners
+    exira
+authors
+    exira
+projectUrl
+    http://git.exira.com/static-mailer/
+iconUrl
+    https://raw.githubusercontent.com/exira/static-mailer/master/docs/files/img/logo.png
+licenseUrl
+    http://github.com/exira/static-mailer/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2015
+tags
+    owin rest topshelf f#
+summary
+    Exira.StaticMailer is a REST endpoint running in a Windows Service to enable static sites to easily send mail
+description
+    Exira.StaticMailer is a REST endpoint running in a Windows Service to enable static sites to easily send mail
+files
+    bin/Release/*.exe ==> tools
+    bin/Release/*.dll ==> tools
+    bin/Release/*.config ==> tools
+    bin/Release/*.ps1 ==> tools
+    bin/Release/Mailer.yaml ==> tools

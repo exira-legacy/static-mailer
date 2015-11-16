@@ -1,0 +1,4 @@
+﻿Mailer:
+    ServiceName: static-mailer
+    Description: Mailer for static sites
+    RestartIntervalInMinutes: 1
