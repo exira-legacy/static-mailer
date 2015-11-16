@@ -5,6 +5,10 @@
     Port: 8080
     Timeout: 3000
 
+    SmtpHost: smtp.example.org
+    SmtpPort: 25
+
+    From: example@example.org
     To: example@example.org
     Subject: "[static-mailer] Mail from %SITE%"
     Template: |

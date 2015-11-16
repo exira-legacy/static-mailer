@@ -2,6 +2,7 @@
 
 open System.Reflection
 open System.IO
+open System.Net.Mail
 open FSharp.Configuration
 open Suave
 open Suave.Types
@@ -46,9 +47,16 @@ let buildBody form =
         .Replace("%MESSAGE%", message)
 
 let sendMail subject body =
-    let mailTo = mailerConfig.Mailer.To
-    // TODO: Send HTML mail
-    ()
+    use mail =
+        new MailMessage(
+            mailerConfig.Mailer.From,
+            mailerConfig.Mailer.To,
+            subject,
+            body,
+            IsBodyHtml = true)
+
+    use client = new SmtpClient(mailerConfig.Mailer.SmtpHost, mailerConfig.Mailer.SmtpPort)
+    client.Send mail
 
 let contact form =
     let subject = buildSubject form
