@@ -2,3 +2,6 @@
     ServiceName: static-mailer
     Description: Mailer for static sites
     RestartIntervalInMinutes: 1
+    Port: 8080
+    Timeout: 3000
+    To: example@example.org

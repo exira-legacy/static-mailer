@@ -1,21 +1,39 @@
 ﻿open System.Diagnostics
-open System.Reflection
-open System.IO
-open FSharp.Configuration
+open System.Threading
+open System.Net
 open Topshelf
 open Time
+open Suave.Web
+open Suave.Types
+open Mailer
 
-let executablePath = Assembly.GetEntryAssembly().Location |> Path.GetDirectoryName
-let configPath = Path.Combine(executablePath, "Mailer.yaml")
-
-type MailerConfig = YamlConfig<"Mailer.yaml">
-let mailerConfig = MailerConfig()
-mailerConfig.Load configPath
+let mutable cancellationTokenSource = None
 
 let stop _ =
-    true
+    match cancellationTokenSource with
+    | Some (cts: CancellationTokenSource) ->
+        cts.Cancel()
+        cancellationTokenSource <- None
+        true
+    | None ->
+        true
 
 let start hostControl =
+    let cts = new CancellationTokenSource()
+
+    // TODO: Add SSL from config file
+    let webConfig =
+        { defaultConfig with
+            cancellationToken = cts.Token
+            listenTimeout = ms mailerConfig.Mailer.Timeout
+            bindings = [ HttpBinding.mk HTTP (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Port) ] }
+
+    startWebServerAsync webConfig application
+    |> snd
+    |> Async.StartAsTask
+    |> ignore
+
+    cancellationTokenSource <- Some cts
     true
 
 [<EntryPoint>]
