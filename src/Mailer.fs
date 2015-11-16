@@ -11,6 +11,7 @@ open Suave.Http.Successful
 open Suave.Http.Applicatives
 open Suave.Http.Writers
 open Suave.Http.Embedded
+open Suave.Utils
 
 let entryAssembly = Assembly.GetEntryAssembly()
 let executablePath = entryAssembly.Location |> Path.GetDirectoryName
@@ -23,7 +24,11 @@ mailerConfig.Load configPath
 let sendStaticLogo =
     sendResource entryAssembly "index.html" true
 
+let greetings form =
+  defaultArg (Option.ofChoice(form ^^ "name")) "World"
+  |> sprintf "Hello %s"
+
 let application =
   choose
-    [ POST >>= path "/send" >>= OK "Hello POST"
+    [ POST >>= path "/send" >>= request (fun request -> OK <| greetings request.form)
       sendStaticLogo ]
