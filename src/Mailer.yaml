@@ -4,4 +4,17 @@
     RestartIntervalInMinutes: 1
     Port: 8080
     Timeout: 3000
+
     To: example@example.org
+    Subject: "[static-mailer] Mail from %SITE%"
+    Template: |
+        Hello,
+
+        Somebody has sent you a mail from <strong>%SITE%</strong>, have a look!
+
+        Name: <strong>%NAME%</strong>
+        Email: <strong>%EMAIL%</strong>
+        Subject: <strong>%SUBJECT%</strong>
+
+        Message:
+        %MESSAGE%

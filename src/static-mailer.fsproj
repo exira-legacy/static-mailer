@@ -66,11 +66,11 @@
     <None Include="Install.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Mailer.fs" />
+    <Compile Include="Program.fs" />
     <None Include="Mailer.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="Mailer.fs" />
-    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
