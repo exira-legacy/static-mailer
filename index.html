@@ -39,6 +39,42 @@
 
 <h3><a name="Usage" class="anchor" href="#Usage">Usage</a></h3>
 
+<ul>
+<li><p>Download the latest release from <a href="https://github.com/exira/static-mailer/releases">the GitHub releases page</a></p></li>
+<li><p>Unzip somewhere</p></li>
+<li>Edit <code>Mailer.yaml</code> using:
+<ul>
+<li>HttpPort: <code>8080</code>, the HTTP port you want the service to listen on</li>
+<li>HttpsPort: <code>8081</code>, the HTTPS port you want the service to listen on</li>
+<li>SmtpHost: <code>smtp.example.org</code>, the SMTP server to mail</li>
+<li>SmtpPort: <code>25</code>, the SMTP port to use</li>
+<li>ContactDetails: A list of sites which can use the static-mailer
+<ul>
+<li>Site: <code>Site1</code>, a unique key identifying a website to send static mail for</li>
+<li>From: <code>example@example.org</code>, the email address which should be shown as the sender</li>
+<li><p>To: <code>site1@example.org</code>, the email address to send the mail to</p></li>
+</ul></li>
+</ul></li>
+<li><p>Run the <code>Install.ps1</code> script with the same servicename you configured in <code>Mailer.yaml</code>, for example: <code>powershell ./Install.ps1 -servicename static-mailer</code></p></li>
+<li>Instead you can also simply run one of the following:
+<ul>
+<li><code>static-mailer.exe install</code></li>
+<li><code>static-mailer.exe start</code></li>
+<li><code>static-mailer.exe stop</code></li>
+<li><p><code>static-mailer.exe uninstall</code></p></li>
+</ul></li>
+<li><p>Test if the service is accessibly by trying to surf to it on your configured port.</p></li>
+<li>You can now send mail from static sites by posting to <code>/send</code> with the following form fields:
+<ul>
+<li><code>site</code>, one of the unique keys previously configured</li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>subject</code></li>
+<li><p><code>message</code></p></li>
+</ul></li>
+<li><p>If the mail has been successfully sent, you will get <code>success</code> as a response. Otherwise you will receive <code>fail</code>.</p></li>
+</ul>
+
 <h3><a name="Cloning" class="anchor" href="#Cloning">Cloning</a></h3>
 
 <p><code>git clone git@github.com:exira/static-mailer.git -c core.autocrlf=input</code></p>
