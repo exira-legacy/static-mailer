@@ -64,7 +64,7 @@ let sendMail (contact: MailerConfig.Mailer_Type.ContactDetails_Item_Type) subjec
             body,
             IsBodyHtml = true)
 
-    use client = new SmtpClient(mailerConfig.Mailer.SmtpHost, mailerConfig.Mailer.SmtpPort)
+    use client = new SmtpClient(mailerConfig.Mailer.Smtp.SmtpHost, mailerConfig.Mailer.Smtp.SmtpPort)
     client.Send mail
 
 let contact form =
