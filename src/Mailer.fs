@@ -22,8 +22,6 @@ type MailerConfig = YamlConfig<"Mailer.yaml">
 let mailerConfig = MailerConfig()
 mailerConfig.Load configPath
 
-type ContactDetails = { From: string; To: string}
-
 let sendStaticLogo =
     sendResource entryAssembly "index.html" true
 
@@ -48,7 +46,7 @@ let buildBody form =
         .Replace("%SUBJECT%", subject)
         .Replace("%MESSAGE%", message)
 
-let sendMail contact subject body =
+let sendMail (contact: MailerConfig.Mailer_Type.ContactDetails_Item_Type) subject body =
     use mail =
         new MailMessage(
             contact.From,
@@ -63,10 +61,9 @@ let sendMail contact subject body =
 let contact form =
     let getContactDetails form =
         let site = defaultArg (Option.ofChoice(form ^^ "site")) "default"
+
         mailerConfig.Mailer.ContactDetails
-        |> Seq.map (fun x -> x.Site, { From = x.From; To = x.To })
-        |> Map.ofSeq
-        |> Map.tryFind site
+        |> Seq.tryFind (fun x ->  x.Site = site)
 
     let sendContact contactDetails =
         let subject = buildSubject form
