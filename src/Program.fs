@@ -26,7 +26,7 @@ let start hostControl =
 
     let httpBinding() = HttpBinding.mk HTTP (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpPort)
     let httpsBinding() =
-        use bio = new BIO(File.ReadAllBytes mailerConfig.Mailer.Endpoint.HttpsPfx)
+        let bio = new BIO(File.ReadAllBytes mailerConfig.Mailer.Endpoint.HttpsPfx)
         let cert = X509Certificate.FromPKCS12(bio, mailerConfig.Mailer.Endpoint.HttpsPassword)
         HttpBinding.mk (HTTPS (open_ssl cert)) (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpsPort)
 

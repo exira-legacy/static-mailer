@@ -16,8 +16,11 @@ Exira.StaticMailer is a REST endpoint running in a Windows Service to enable sta
 * Unzip somewhere
 
 * Edit `Mailer.yaml` using:
+  * UseHttp and UseHttps: `true` or `false`, if you want to listen on HTTP and/or HTTPS
   * HttpPort: `8080`, the HTTP port you want the service to listen on
   * HttpsPort: `8081`, the HTTPS port you want the service to listen on
+  * HttpsPfx: `cert.pfx`, the filename of the certificate pfx file
+  * HttpsPassword: `cert`, password to be used for the pfx file
   * SmtpHost: `smtp.example.org`, the SMTP server to mail
   * SmtpPort: `25`, the SMTP port to use
   * ContactDetails: A list of sites which can use the static-mailer
