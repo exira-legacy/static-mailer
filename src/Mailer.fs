@@ -73,14 +73,13 @@ let contact form =
         contactDetails
         |> Map.tryFind site
 
-    let sendContact (contactDetails: MailerConfig.Mailer_Type.ContactDetails_Item_Type) =
+    let sendContact contactDetails =
         let subject = buildSubject form
         let body = buildBody form
 
         try
-            //sendMail contactDetails subject body
-            //sprintf "success"
-            sprintf "%s" contactDetails.Site
+            sendMail contactDetails subject body
+            sprintf "success"
         with
         | ex -> sprintf "fail"
 

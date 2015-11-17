@@ -11,7 +11,38 @@ Exira.StaticMailer is a REST endpoint running in a Windows Service to enable sta
 
 ### Usage
 
+* Download the latest release from [the GitHub releases page](https://github.com/exira/static-mailer/releases)
 
+* Unzip somewhere
+
+* Edit `Mailer.yaml` using:
+  * HttpPort: `8080`, the HTTP port you want the service to listen on
+  * HttpsPort: `8081`, the HTTPS port you want the service to listen on
+  * SmtpHost: `smtp.example.org`, the SMTP server to mail
+  * SmtpPort: `25`, the SMTP port to use
+  * ContactDetails: A list of sites which can use the static-mailer
+    * Site: `Site1`, a unique key identifying a website to send static mail for
+    * From: `example@example.org`, the email address which should be shown as the sender
+    * To: `site1@example.org`, the email address to send the mail to
+
+* Run the `Install.ps1` script with the same servicename you configured in `Mailer.yaml`, for example: `powershell ./Install.ps1 -servicename static-mailer`
+
+* Instead you can also simply run one of the following:
+  * `static-mailer.exe install`
+  * `static-mailer.exe start`
+  * `static-mailer.exe stop`
+  * `static-mailer.exe uninstall`
+
+* Test if the service is accessibly by trying to surf to it on your configured port.
+
+* You can now send mail from static sites by posting to `/send` with the following form fields:
+  * `site`, one of the unique keys previously configured
+  * `name`
+  * `email`
+  * `subject`
+  * `message`
+
+* If the mail has been successfully sent, you will get `success` as a response. Otherwise you will receive `fail`.
 
 ### Cloning
 

@@ -2,7 +2,8 @@
     ServiceName: static-mailer
     Description: Mailer for static sites
     RestartIntervalInMinutes: 1
-    Port: 8080
+    HttpPort: 8080
+    HttpsPort: 8081
     Timeout: 3000
 
     SmtpHost: smtp.example.org
