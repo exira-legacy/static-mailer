@@ -24,8 +24,8 @@ let stop _ =
 let start hostControl =
     let cts = new CancellationTokenSource()
 
-    let httpBinding = HttpBinding.mk HTTP (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpPort)
-    let httpsBinding =
+    let httpBinding() = HttpBinding.mk HTTP (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpPort)
+    let httpsBinding() =
         use bio = new BIO(File.ReadAllBytes mailerConfig.Mailer.Endpoint.HttpsPfx)
         let cert = X509Certificate.FromPKCS12(bio, mailerConfig.Mailer.Endpoint.HttpsPassword)
 
@@ -33,9 +33,9 @@ let start hostControl =
 
     let bindings =
         match mailerConfig.Mailer.Endpoint.UseHttp, mailerConfig.Mailer.Endpoint.UseHttps with
-        | true, true -> [ httpBinding; httpsBinding ]
-        | true, false -> [ httpBinding ]
-        | false, true -> [ httpsBinding ]
+        | true, true -> [ httpBinding(); httpsBinding() ]
+        | true, false -> [ httpBinding() ]
+        | false, true -> [ httpsBinding() ]
         | false, false -> [ ]
 
     let webConfig =

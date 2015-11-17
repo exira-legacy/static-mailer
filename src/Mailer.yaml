@@ -10,7 +10,7 @@
         UseHttps: false
         HttpsPort: 8081
         HttpsPfx: cert.pfx
-        HttpsPassword: pass
+        HttpsPassword: cert
         Timeout: 3000
 
     Smtp:

@@ -88,6 +88,14 @@
     <None Include="paket.template" />
     <None Include="paket.references" />
     <EmbeddedResource Include="index.html" />
+    <None Include="..\lib\libeay32.dll">
+      <Link>libeay32.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\lib\ssleay32.dll">
+      <Link>ssleay32.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Install.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
