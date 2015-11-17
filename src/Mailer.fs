@@ -20,7 +20,16 @@ let configPath = Path.Combine(executablePath, "Mailer.yaml")
 
 type MailerConfig = YamlConfig<"Mailer.yaml">
 let mailerConfig = MailerConfig()
-mailerConfig.Load configPath
+mailerConfig.LoadAndWatch configPath |> ignore
+
+let loadContactDetails () =
+    mailerConfig.Mailer.ContactDetails
+    |> Seq.map (fun x -> x.Site, x)
+    |> Map.ofSeq
+
+let mutable contactDetails = loadContactDetails()
+
+mailerConfig.Mailer.Changed.Add (fun x -> contactDetails <- loadContactDetails())
 
 let sendStaticLogo =
     sendResource entryAssembly "index.html" true
@@ -61,17 +70,17 @@ let sendMail (contact: MailerConfig.Mailer_Type.ContactDetails_Item_Type) subjec
 let contact form =
     let getContactDetails form =
         let site = defaultArg (Option.ofChoice(form ^^ "site")) "default"
+        contactDetails
+        |> Map.tryFind site
 
-        mailerConfig.Mailer.ContactDetails
-        |> Seq.tryFind (fun x ->  x.Site = site)
-
-    let sendContact contactDetails =
+    let sendContact (contactDetails: MailerConfig.Mailer_Type.ContactDetails_Item_Type) =
         let subject = buildSubject form
         let body = buildBody form
 
         try
-            sendMail contactDetails subject body
-            sprintf "success"
+            //sendMail contactDetails subject body
+            //sprintf "success"
+            sprintf "%s" contactDetails.Site
         with
         | ex -> sprintf "fail"
 
