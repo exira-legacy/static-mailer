@@ -44,8 +44,11 @@
 <li><p>Unzip somewhere</p></li>
 <li>Edit <code>Mailer.yaml</code> using:
 <ul>
+<li>UseHttp and UseHttps: <code>true</code> or <code>false</code>, if you want to listen on HTTP and/or HTTPS</li>
 <li>HttpPort: <code>8080</code>, the HTTP port you want the service to listen on</li>
 <li>HttpsPort: <code>8081</code>, the HTTPS port you want the service to listen on</li>
+<li>HttpsPfx: <code>cert.pfx</code>, the filename of the certificate pfx file</li>
+<li>HttpsPassword: <code>cert</code>, password to be used for the pfx file</li>
 <li>SmtpHost: <code>smtp.example.org</code>, the SMTP server to mail</li>
 <li>SmtpPort: <code>25</code>, the SMTP port to use</li>
 <li>ContactDetails: A list of sites which can use the static-mailer
