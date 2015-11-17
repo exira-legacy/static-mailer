@@ -22,18 +22,20 @@ type MailerConfig = YamlConfig<"Mailer.yaml">
 let mailerConfig = MailerConfig()
 mailerConfig.Load configPath
 
+type ContactDetails = { From: string; To: string}
+
 let sendStaticLogo =
     sendResource entryAssembly "index.html" true
 
 let buildSubject form =
     let template = mailerConfig.Mailer.Subject
-    let site = defaultArg (Option.ofChoice(form ^^ "site")) "static-mailer"
+    let site = defaultArg (Option.ofChoice(form ^^ "site")) "N/A"
     template.Replace("%SITE%", site)
 
 let buildBody form =
     let template = mailerConfig.Mailer.Template
 
-    let site = defaultArg (Option.ofChoice(form ^^ "site")) "static-mailer"
+    let site = defaultArg (Option.ofChoice(form ^^ "site")) "N/A"
     let name = defaultArg (Option.ofChoice(form ^^ "name")) "N/A"
     let email = defaultArg (Option.ofChoice(form ^^ "email")) "N/A"
     let subject = defaultArg (Option.ofChoice(form ^^ "subject")) "N/A"
@@ -46,11 +48,11 @@ let buildBody form =
         .Replace("%SUBJECT%", subject)
         .Replace("%MESSAGE%", message)
 
-let sendMail subject body =
+let sendMail contact subject body =
     use mail =
         new MailMessage(
-            mailerConfig.Mailer.From,
-            mailerConfig.Mailer.To,
+            contact.From,
+            contact.To,
             subject,
             body,
             IsBodyHtml = true)
@@ -59,14 +61,27 @@ let sendMail subject body =
     client.Send mail
 
 let contact form =
-    let subject = buildSubject form
-    let body = buildBody form
+    let getContactDetails form =
+        let site = defaultArg (Option.ofChoice(form ^^ "site")) "default"
+        mailerConfig.Mailer.ContactDetails
+        |> Seq.map (fun x -> x.Site, { From = x.From; To = x.To })
+        |> Map.ofSeq
+        |> Map.tryFind site
 
-    try
-        sendMail subject body
-        sprintf "success"
-    with
-    | ex -> sprintf "fail"
+    let sendContact contactDetails =
+        let subject = buildSubject form
+        let body = buildBody form
+
+        try
+            sendMail contactDetails subject body
+            sprintf "success"
+        with
+        | ex -> sprintf "fail"
+
+    let contactDetails = getContactDetails form
+    match contactDetails with
+    | Some c -> sendContact c
+    | None -> sprintf "fail"
 
 let application =
   choose
