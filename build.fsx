@@ -142,7 +142,7 @@ Target "Build" (fun _ ->
     log "##teamcity[progressStart 'Build']"
 
     !! solutionFile
-    |> MSBuildRelease "" "Rebuild"
+    |> MSBuild "" "Rebuild" [ "Configuration", "Release"; "Platform", "x86" ]
     |> ignore
 
     log "##teamcity[progressFinish 'Build']"
