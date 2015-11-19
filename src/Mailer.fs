@@ -7,13 +7,11 @@ open System.Net.Mail
 open FSharp.Configuration
 open Suave
 open Suave.Types
-open Suave.Web
 open Suave.Http
 open Suave.Http.Successful
 open Suave.Http.RequestErrors
 open Suave.Http.ServerErrors
 open Suave.Http.Applicatives
-open Suave.Http.Writers
 open Suave.Http.Embedded
 open Suave.Utils
 
@@ -31,7 +29,7 @@ eventLog.Source <- mailerConfig.Mailer.Service.ServiceName
 
 let loadContactDetails () =
     mailerConfig.Mailer.ContactDetails
-    |> Seq.map (fun x -> x.Site, x)
+    |> Seq.map (fun x -> x.Site.ToLowerInvariant(), x)
     |> Map.ofSeq
 
 let mutable contactDetails = loadContactDetails()
@@ -77,6 +75,7 @@ let sendMail (contact: MailerConfig.Mailer_Type.ContactDetails_Item_Type) subjec
 let contact form =
     let getContactDetails form =
         let site = defaultArg (Option.ofChoice(form ^^ "site")) "default"
+        let site = site.ToLowerInvariant()
         contactDetails
         |> Map.tryFind site
 
@@ -89,7 +88,7 @@ let contact form =
             OK <| sprintf "success"
         with
         | ex ->
-            eventLog.WriteEntry(sprintf "%s: %s" ex.Message ex.StackTrace, EventLogEntryType.Error)
+            eventLog.WriteEntry(sprintf "%s" <| ex.ToString(), EventLogEntryType.Error)
             INTERNAL_ERROR <| sprintf "fail"
 
     let contactDetails = getContactDetails form
