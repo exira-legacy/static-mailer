@@ -1,5 +1,6 @@
 ﻿module Mailer
 
+open System.Diagnostics
 open System.Reflection
 open System.IO
 open System.Net.Mail
@@ -9,6 +10,8 @@ open Suave.Types
 open Suave.Web
 open Suave.Http
 open Suave.Http.Successful
+open Suave.Http.RequestErrors
+open Suave.Http.ServerErrors
 open Suave.Http.Applicatives
 open Suave.Http.Writers
 open Suave.Http.Embedded
@@ -21,6 +24,10 @@ let configPath = Path.Combine(executablePath, "Mailer.yaml")
 type MailerConfig = YamlConfig<"Mailer.yaml">
 let mailerConfig = MailerConfig()
 mailerConfig.LoadAndWatch configPath |> ignore
+
+let eventLog = new EventLog()
+eventLog.Log <- "Application"
+eventLog.Source <- mailerConfig.Mailer.Service.ServiceName
 
 let loadContactDetails () =
     mailerConfig.Mailer.ContactDetails
@@ -79,16 +86,18 @@ let contact form =
 
         try
             sendMail contactDetails subject body
-            sprintf "success"
+            OK <| sprintf "success"
         with
-        | ex -> sprintf "fail"
+        | ex ->
+            eventLog.WriteEntry(sprintf "%s: %s" ex.Message ex.StackTrace, EventLogEntryType.Error)
+            INTERNAL_ERROR <| sprintf "fail"
 
     let contactDetails = getContactDetails form
     match contactDetails with
     | Some c -> sendContact c
-    | None -> sprintf "fail"
+    | None -> BAD_REQUEST <| sprintf "fail"
 
 let application =
   choose
-    [ POST >>= path "/send" >>= request (fun request -> OK <| contact request.form)
+    [ POST >>= path "/send" >>= request (fun request -> contact request.form)
       sendStaticLogo ]

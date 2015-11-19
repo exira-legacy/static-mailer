@@ -60,6 +60,7 @@ let main argv =
     |> with_recovery (ServiceRecovery.Default |> restart (min mailerConfig.Mailer.Service.RestartIntervalInMinutes))
     |> with_start start
     |> with_stop stop
+    |> depends_on_eventlog
     |> description mailerConfig.Mailer.Service.Description
     |> display_name mailerConfig.Mailer.Service.ServiceName
     |> service_name mailerConfig.Mailer.Service.ServiceName
