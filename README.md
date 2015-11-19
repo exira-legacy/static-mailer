@@ -40,6 +40,8 @@ Exira.StaticMailer is a REST endpoint running in a Windows Service to enable sta
 
 * If the mail has been successfully sent, you will get `success` as a response. Otherwise you will receive `fail`.
 
+* In case of exceptions, you can view them in the Event Log
+
 ## Cloning
 
 `git clone git@github.com:exira/static-mailer.git -c core.autocrlf=input`

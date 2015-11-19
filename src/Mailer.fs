@@ -52,6 +52,11 @@ let buildBody form =
     let email = defaultArg (Option.ofChoice(form ^^ "email")) "N/A"
     let subject = defaultArg (Option.ofChoice(form ^^ "subject")) "N/A"
     let message = defaultArg (Option.ofChoice(form ^^ "message")) "N/A"
+    let message =
+        message
+            .Replace("\r\n", "<br>")
+            .Replace("\n", "<br>")
+            .Replace("\r", "<br>")
 
     template
         .Replace("%SITE%", site)

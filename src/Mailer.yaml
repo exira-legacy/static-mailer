@@ -30,13 +30,13 @@
 
     Subject: "[static-mailer] Mail from %SITE%"
     Template: |
-        Hello,
-
-        Somebody has sent you a mail from <strong>%SITE%</strong>, have a look!
-
-        Name: <strong>%NAME%</strong>
-        Email: <strong>%EMAIL%</strong>
-        Subject: <strong>%SUBJECT%</strong>
-
-        Message:
+        Hello,<br>
+        <br>
+        Somebody has sent you a mail from <strong>%SITE%</strong>, have a look!<br>
+        <br>
+        Name: <strong>%NAME%</strong><br>
+        Email: <strong>%EMAIL%</strong><br>
+        Subject: <strong>%SUBJECT%</strong><br>
+        <br>
+        Message:<br>
         %MESSAGE%
