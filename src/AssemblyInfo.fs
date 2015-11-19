@@ -4,10 +4,10 @@ open System.Reflection
 [<assembly: AssemblyTitleAttribute("static-mailer")>]
 [<assembly: AssemblyProductAttribute("Exira.StaticMailer")>]
 [<assembly: AssemblyDescriptionAttribute("Exira.StaticMailer is a REST endpoint running in a Windows Service to enable static sites to easily send mail")>]
-[<assembly: AssemblyVersionAttribute("0.1.13")>]
-[<assembly: AssemblyFileVersionAttribute("0.1.13")>]
-[<assembly: AssemblyMetadataAttribute("githash","8ca1052c3d23d6203c06e1d29ea026a877b0ff40")>]
+[<assembly: AssemblyVersionAttribute("0.1.14")>]
+[<assembly: AssemblyFileVersionAttribute("0.1.14")>]
+[<assembly: AssemblyMetadataAttribute("githash","45472049ec2c10832242be56fd3658a4e280b655")>]
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] Version = "0.1.13"
+    let [<Literal>] Version = "0.1.14"
