@@ -12,6 +12,7 @@ open Suave.Http.Successful
 open Suave.Http.RequestErrors
 open Suave.Http.ServerErrors
 open Suave.Http.Applicatives
+open Suave.Http.Writers
 open Suave.Http.Embedded
 open Suave.Utils
 
@@ -101,7 +102,26 @@ let contact form =
     | Some c -> sendContact c
     | None -> BAD_REQUEST <| sprintf "fail"
 
+let cors headers =
+    let origin = headers |> List.tryPick (fun (key, value) -> if key = "origin" then Some value else None)
+
+    let findOrigin origin =
+        mailerConfig.Mailer.AllowedOrigins
+        |> Seq.tryFind (fun uri -> uri.ToString() = origin)
+
+    let isAllowed =
+        match origin with
+        | None -> None
+        | Some o -> findOrigin o
+
+    match isAllowed with
+    | None -> METHOD_NOT_ALLOWED <| sprintf "fail"
+    | Some _ ->
+        setHeader  "Access-Control-Allow-Origin" "*"
+        >>= OK "CORS approved"
+
 let application =
   choose
-    [ POST >>= path "/send" >>= request (fun request -> contact request.form)
+    [ OPTIONS >>= request (fun request -> cors request.headers)
+      POST >>= path "/send" >>= request (fun request -> contact request.form)
       sendStaticLogo ]

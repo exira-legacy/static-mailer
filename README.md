@@ -20,6 +20,7 @@ Exira.StaticMailer is a REST endpoint running in a Windows Service to enable sta
     * Site: `Site1`, a unique key identifying a website to send static mail for
     * From: `example@example.org`, the email address which should be shown as the sender
     * To: `site1@example.org`, the email address to send the mail to
+  * AllowedOrigins: A list of allowed origins for CORS
 
 * Run the `Install.ps1` script with the same servicename you configured in `Mailer.yaml`, for example: `powershell ./Install.ps1 -servicename static-mailer`
 

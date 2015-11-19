@@ -28,6 +28,9 @@
           From: example@example.org
           To: site3@example.org
 
+    AllowedOrigins:
+        - http://www.example.org
+
     Subject: "[static-mailer] Mail from %SITE%"
     Template: |
         Hello,<br>

@@ -1,3 +1,6 @@
+#### 1.1 - November 19 2015
+* Add CORS support
+
 #### 1.0 - November 19 2015
 * Taken into production and running stable
 
