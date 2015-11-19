@@ -1,5 +1,6 @@
 ﻿module Mailer
 
+open System
 open System.Diagnostics
 open System.Reflection
 open System.IO
@@ -78,14 +79,31 @@ let sendMail (contact: MailerConfig.Mailer_Type.ContactDetails_Item_Type) subjec
     use client = new SmtpClient(mailerConfig.Mailer.Smtp.SmtpHost, mailerConfig.Mailer.Smtp.SmtpPort)
     client.Send mail
 
-let contact form =
+let isAllowedOrigin headers =
+    let origin = headers |> List.tryPick (fun (key, value) -> if key = "origin" then Some value else None)
+
+    let findOrigin origin =
+        let origin = Uri origin
+        mailerConfig.Mailer.AllowedOrigins
+        |> Seq.tryFind (fun uri -> uri = origin)
+
+    let configuredOrigin =
+        match origin with
+        | None -> None
+        | Some o -> findOrigin o
+
+    match configuredOrigin with
+    | None -> None
+    | Some _ -> origin
+
+let contact (request: HttpRequest) =
     let getContactDetails form =
         let site = defaultArg (Option.ofChoice(form ^^ "site")) "default"
         let site = site.ToLowerInvariant()
         contactDetails
         |> Map.tryFind site
 
-    let sendContact contactDetails =
+    let sendToContact form contactDetails =
         let subject = buildSubject form
         let body = buildBody form
 
@@ -97,31 +115,20 @@ let contact form =
             eventLog.WriteEntry(sprintf "%s" <| ex.ToString(), EventLogEntryType.Error)
             INTERNAL_ERROR <| sprintf "fail"
 
-    let contactDetails = getContactDetails form
-    match contactDetails with
-    | Some c -> sendContact c
-    | None -> BAD_REQUEST <| sprintf "fail"
+    let processForm form origin =
+        let contactDetails = getContactDetails form
+        match contactDetails with
+        | None -> BAD_REQUEST <| sprintf "fail"
+        | Some c ->
+            setHeader "Access-Control-Allow-Origin" origin
+            >>= sendToContact form c
 
-let cors headers =
-    let origin = headers |> List.tryPick (fun (key, value) -> if key = "origin" then Some value else None)
-
-    let findOrigin origin =
-        mailerConfig.Mailer.AllowedOrigins
-        |> Seq.tryFind (fun uri -> uri.ToString() = origin)
-
-    let isAllowed =
-        match origin with
-        | None -> None
-        | Some o -> findOrigin o
-
+    let isAllowed = isAllowedOrigin request.headers
     match isAllowed with
     | None -> METHOD_NOT_ALLOWED <| sprintf "fail"
-    | Some _ ->
-        setHeader  "Access-Control-Allow-Origin" "*"
-        >>= OK "CORS approved"
+    | Some origin -> processForm request.form origin
 
 let application =
   choose
-    [ OPTIONS >>= request (fun request -> cors request.headers)
-      POST >>= path "/send" >>= request (fun request -> contact request.form)
+    [ POST >>= path "/send" >>= request contact
       sendStaticLogo ]
