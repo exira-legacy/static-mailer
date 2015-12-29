@@ -1,3 +1,6 @@
+#### 1.2 - December 29 2015
+* Target .NET 4.6.1
+
 #### 1.1 - November 19 2015
 * Add CORS support
 
