@@ -58,6 +58,6 @@ Logging:
             PathFormat: static-mailer-{Date}.txt
 
         Seq:
-            Enabled: false
-            Url: https://example.org
-            ApiKey: YOUR API KEY
+            Enabled: true
+            Url: #{SeqEndpoint}
+            ApiKey: #{SeqApiKey}

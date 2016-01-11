@@ -19,6 +19,10 @@ NUGET
       Microsoft.Bcl.Build (>= 1.0.14)
     Octokit (0.17.0)
       Microsoft.Net.Http
+    Serilog (1.5.14) - framework: >= net40
+    Serilog.Sinks.Seq (1.5.27)
+      Microsoft.Net.Http (>= 2.2.20) - framework: net40
+      Serilog (>= 1.5.10) - framework: >= net40
     SourceLink.Fake (1.1.0)
     Suave (0.33.0)
       FSharp.Core (>= 3.1.2.5)
@@ -31,5 +35,5 @@ NUGET
 GITHUB
   remote: fsharp/FAKE
   specs:
-    modules/Octokit/Octokit.fsx (7d1a6f8e48d1e2e1e3246ea24a4de05cccc8ce64)
+    modules/Octokit/Octokit.fsx (867e3b61222603af09f9b0c6f2b0e4a18af84c84)
       Octokit

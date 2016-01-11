@@ -3,3 +3,4 @@ FSharp.Configuration
 Topshelf.FSharp
 Suave
 Suave.OpenSSL
+Serilog.Sinks.Seq

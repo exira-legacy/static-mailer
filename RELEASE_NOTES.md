@@ -1,3 +1,6 @@
+#### 1.3 - January 11 2016
+* Add Serilog
+
 #### 1.2 - December 29 2015
 * Target .NET 4.6.1
 
