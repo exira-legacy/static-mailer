@@ -99,7 +99,9 @@
     <None Include="Install.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Mailer.Production.yaml" />
+    <None Include="Mailer.Production.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Mailer.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

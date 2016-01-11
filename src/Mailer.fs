@@ -108,7 +108,7 @@ module internal Mailer =
                 OK <| sprintf "success"
             with
             | ex ->
-                logger.Fatal(ex, "Failed to send mail to {contact}, {subject} - {body}", contactDetails.To, subject, body)
+                logger.Fatal("Failed to send mail to {contact}, {subject} - {body} - {exception}", contactDetails.To, subject, body, ex.ToString())
                 eventLog.WriteEntry(sprintf "%s" <| ex.ToString(), EventLogEntryType.Error)
                 INTERNAL_ERROR <| sprintf "fail"
 
