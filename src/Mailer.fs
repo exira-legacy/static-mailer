@@ -2,22 +2,24 @@
 
 module internal Mailer =
     open System
+    open System.Reflection
     open System.Diagnostics
     open System.Net.Mail
     open Suave
-    open Suave.Types
     open Suave.Http
-    open Suave.Http.Successful
-    open Suave.Http.RequestErrors
-    open Suave.Http.ServerErrors
-    open Suave.Http.Applicatives
-    open Suave.Http.Writers
-    open Suave.Http.Embedded
+    open Suave.Filters
+    open Suave.Writers
+    open Suave.Embedded
+    open Suave.Operators
+    open Suave.Successful
+    open Suave.ServerErrors
+    open Suave.RequestErrors
     open Suave.Utils
     open Configuration
 
     let private mailerConfig = Configuration.mailerConfig
     let private logger = Serilogger.logger
+    let private entryAssembly = Assembly.GetEntryAssembly()
 
     let private eventLog = new EventLog()
     eventLog.Log <- "Application"
@@ -30,24 +32,28 @@ module internal Mailer =
 
     let mutable private contactDetails = loadContactDetails()
 
-    mailerConfig.Mailer.Changed.Add (fun x -> contactDetails <- loadContactDetails())
+    mailerConfig.Mailer.Changed.Add (fun _ -> contactDetails <- loadContactDetails())
+
+    let private ofChoice = function
+    | Choice1Of2 x -> Some x
+    | _ -> None
 
     let private sendStaticLogo =
         sendResource entryAssembly "index.html" true
 
     let private buildSubject form =
         let template = mailerConfig.Mailer.Subject
-        let site = defaultArg (Option.ofChoice(form ^^ "site")) "N/A"
+        let site = defaultArg (ofChoice(form ^^ "site")) "N/A"
         template.Replace("%SITE%", site)
 
     let private buildBody form =
         let template = mailerConfig.Mailer.Template
 
-        let site = defaultArg (Option.ofChoice(form ^^ "site")) "N/A"
-        let name = defaultArg (Option.ofChoice(form ^^ "name")) "N/A"
-        let email = defaultArg (Option.ofChoice(form ^^ "email")) "N/A"
-        let subject = defaultArg (Option.ofChoice(form ^^ "subject")) "N/A"
-        let message = defaultArg (Option.ofChoice(form ^^ "message")) "N/A"
+        let site = defaultArg (ofChoice(form ^^ "site")) "N/A"
+        let name = defaultArg (ofChoice(form ^^ "name")) "N/A"
+        let email = defaultArg (ofChoice(form ^^ "email")) "N/A"
+        let subject = defaultArg (ofChoice(form ^^ "subject")) "N/A"
+        let message = defaultArg (ofChoice(form ^^ "message")) "N/A"
         let message =
             message
                 .Replace("\r\n", "<br>")
@@ -92,7 +98,7 @@ module internal Mailer =
 
     let private contact (request: HttpRequest) =
         let getContactDetails form =
-            let site = defaultArg (Option.ofChoice(form ^^ "site")) "default"
+            let site = defaultArg (ofChoice(form ^^ "site")) "default"
             let site = site.ToLowerInvariant()
             contactDetails
             |> Map.tryFind site
@@ -118,7 +124,7 @@ module internal Mailer =
             | None -> BAD_REQUEST <| sprintf "fail"
             | Some c ->
                 setHeader "Access-Control-Allow-Origin" origin
-                >>= sendToContact form c
+                >=> sendToContact form c
 
         let isAllowed = isAllowedOrigin request.headers
         match isAllowed with
@@ -127,5 +133,5 @@ module internal Mailer =
 
     let application =
       choose
-        [ POST >>= path "/send" >>= request contact
+        [ POST >=> path "/send" >=> request contact
           sendStaticLogo ]

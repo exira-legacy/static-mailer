@@ -1,16 +1,14 @@
 ﻿namespace Exira.StaticMailer
 
 module Program =
+    open System
     open System.Threading
     open System.Net
-    open System.IO
+    open System.Security.Cryptography.X509Certificates
     open Topshelf
     open Time
     open Suave.Web
-    open Suave.Types
-    open Suave.OpenSSL.Provider
-    open OpenSSL.Core
-    open OpenSSL.X509
+    open Suave.Http
     open Mailer
 
     let private mailerConfig = Configuration.mailerConfig
@@ -33,9 +31,8 @@ module Program =
 
         let httpBinding() = HttpBinding.mk HTTP (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpPort)
         let httpsBinding() =
-            let bio = new BIO(File.ReadAllBytes mailerConfig.Mailer.Endpoint.HttpsPfx)
-            let cert = X509Certificate.FromPKCS12(bio, mailerConfig.Mailer.Endpoint.HttpsPassword)
-            HttpBinding.mk (HTTPS (open_ssl cert)) (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpsPort)
+            let cert = new X509Certificate(mailerConfig.Mailer.Endpoint.HttpsPfx, mailerConfig.Mailer.Endpoint.HttpsPassword)
+            HttpBinding.mk (HTTPS cert) (IPAddress.Parse "0.0.0.0") (uint16 mailerConfig.Mailer.Endpoint.HttpsPort)
 
         let bindings =
             match mailerConfig.Mailer.Endpoint.UseHttp, mailerConfig.Mailer.Endpoint.UseHttps with
@@ -64,6 +61,10 @@ module Program =
 
     [<EntryPoint>]
     let main _ =
+        AppDomain.CurrentDomain.UnhandledException.Add(fun exc ->
+            let ex = exc.ExceptionObject :?> Exception
+            logger.Fatal("Unhandled exception: {exception}", ex.ToString()))
+
         Service.Default
         |> run_as_local_system
         |> start_auto

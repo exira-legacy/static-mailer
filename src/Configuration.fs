@@ -5,9 +5,9 @@ module internal Configuration =
     open System.Reflection
     open FSharp.Configuration
 
-    let entryAssembly = Assembly.GetEntryAssembly()
-    let executablePath = entryAssembly.Location |> Path.GetDirectoryName
-    let configPath = Path.Combine(executablePath, "Mailer.yaml")
+    let private entryAssembly = Assembly.GetEntryAssembly()
+    let private executablePath = entryAssembly.Location |> Path.GetDirectoryName
+    let private configPath = Path.Combine(executablePath, "Mailer.yaml")
 
     type MailerConfig = YamlConfig<"Mailer.yaml">
     let mailerConfig = MailerConfig()

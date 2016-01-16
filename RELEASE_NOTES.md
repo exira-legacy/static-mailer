@@ -1,3 +1,6 @@
+#### 1.4 - January 16 2016
+* Upgrade to Suave 1.0
+
 #### 1.3 - January 11 2016
 * Add Serilog
 
