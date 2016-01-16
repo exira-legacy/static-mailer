@@ -142,7 +142,7 @@ Target "Build" (fun _ ->
     log "##teamcity[progressStart 'Build']"
 
     !! solutionFile
-    |> MSBuild "" "Rebuild" [ "Configuration", "Release"; "Platform", "x86" ]
+    |> MSBuildRelease "" "Rebuild"
     |> ignore
 
     log "##teamcity[progressFinish 'Build']"
@@ -221,7 +221,6 @@ Target "PublishNuget" (fun _ ->
     //    { p with
     //        WorkingDir = "bin" })
 )
-
 
 // --------------------------------------------------------------------------------------
 // Generate the documentation
