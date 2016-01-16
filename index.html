@@ -34,62 +34,62 @@
         <div class="span9" id="main">
           
 <h1><a name="static-mailer" class="anchor" href="#static-mailer">static-mailer <a href="https://www.nuget.org/packages/Exira.StaticMailer/"><img src="http://img.shields.io/nuget/v/Exira.StaticMailer.svg?style=flat" alt="NuGet Status" /></a></a></h1>
-
 <p>Exira.StaticMailer is a REST endpoint running in a Windows Service to enable static sites to easily send mail.</p>
-
 <h3><a name="Usage" class="anchor" href="#Usage">Usage</a></h3>
-
 <ul>
 <li><p>Download the latest release from <a href="https://github.com/exira/static-mailer/releases">the GitHub releases page</a></p></li>
-<li><p>Unzip somewhere</p></li>
-<li>Edit <code>Mailer.yaml</code> using:
+<li>Unzip somewhere</li>
+<li>
+<p>Edit <code>Mailer.yaml</code> using:</p>
 <ul>
-<li>UseHttp and UseHttps: <code>true</code> or <code>false</code>, if you want to listen on HTTP and/or HTTPS</li>
-<li>HttpPort: <code>8080</code>, the HTTP port you want the service to listen on</li>
-<li>HttpsPort: <code>8081</code>, the HTTPS port you want the service to listen on</li>
-<li>HttpsPfx: <code>cert.pfx</code>, the filename of the certificate pfx file</li>
-<li>HttpsPassword: <code>cert</code>, password to be used for the pfx file</li>
-<li>SmtpHost: <code>smtp.example.org</code>, the SMTP server to mail</li>
-<li>SmtpPort: <code>25</code>, the SMTP port to use</li>
-<li>ContactDetails: A list of sites which can use the static-mailer
+<li><p>UseHttp and UseHttps: <code>true</code> or <code>false</code>, if you want to listen on HTTP and/or HTTPS</p></li>
+<li><p>HttpPort: <code>8080</code>, the HTTP port you want the service to listen on</p></li>
+<li><p>HttpsPort: <code>8081</code>, the HTTPS port you want the service to listen on</p></li>
+<li><p>HttpsPfx: <code>cert.pfx</code>, the filename of the certificate pfx file</p></li>
+<li><p>HttpsPassword: <code>cert</code>, password to be used for the pfx file</p></li>
+<li><p>SmtpHost: <code>smtp.example.org</code>, the SMTP server to mail</p></li>
+<li><p>SmtpPort: <code>25</code>, the SMTP port to use</p></li>
+<li>
+<p>ContactDetails: A list of sites which can use the static-mailer</p>
 <ul>
-<li>Site: <code>Site1</code>, a unique key identifying a website to send static mail for</li>
-<li>From: <code>example@example.org</code>, the email address which should be shown as the sender</li>
-<li>To: <code>site1@example.org</code>, the email address to send the mail to</li>
-</ul></li>
-</ul></li>
-<li><p>AllowedOrigins: A list of allowed origins for CORS</p></li>
-<li><p>Run the <code>Install.ps1</code> script with the same servicename you configured in <code>Mailer.yaml</code>, for example: <code>powershell ./Install.ps1 -servicename static-mailer</code></p></li>
-<li>Instead you can also simply run one of the following:
-<ul>
-<li><code>static-mailer.exe install</code></li>
-<li><code>static-mailer.exe start</code></li>
-<li><code>static-mailer.exe stop</code></li>
-<li><p><code>static-mailer.exe uninstall</code></p></li>
-</ul></li>
-<li><p>Test if the service is accessibly by trying to surf to it on your configured port.</p></li>
-<li>You can now send mail from static sites by posting to <code>/send</code> with the following form fields:
-<ul>
-<li><code>site</code>, one of the unique keys previously configured</li>
-<li><code>name</code></li>
-<li><code>email</code></li>
-<li><code>subject</code></li>
-<li><p><code>message</code></p></li>
-</ul></li>
-<li><p>If the mail has been successfully sent, you will get <code>success</code> as a response. Otherwise you will receive <code>fail</code>.</p></li>
-<li><p>In case of exceptions, you can view them in the Event Log</p></li>
+<li><p>Site: <code>Site1</code>, a unique key identifying a website to send static mail for</p></li>
+<li><p>From: <code>example@example.org</code>, the email address which should be shown as the sender</p></li>
+<li><p>To: <code>site1@example.org</code>, the email address to send the mail to</p></li>
 </ul>
-
+</li>
+</ul>
+</li>
+<li>AllowedOrigins: A list of allowed origins for CORS</li>
+<li><p>Run the <code>Install.ps1</code> script with the same servicename you configured in <code>Mailer.yaml</code>, for example: <code>powershell ./Install.ps1 -servicename static-mailer</code></p></li>
+<li>
+<p>Instead you can also simply run one of the following:</p>
+<ul>
+<li><p><code>static-mailer.exe install</code></p></li>
+<li><p><code>static-mailer.exe start</code></p></li>
+<li><p><code>static-mailer.exe stop</code></p></li>
+<li><p><code>static-mailer.exe uninstall</code></p></li>
+</ul>
+</li>
+<li>Test if the service is accessibly by trying to surf to it on your configured port.</li>
+<li>
+<p>You can now send mail from static sites by posting to <code>/send</code> with the following form fields:</p>
+<ul>
+<li><p><code>site</code>, one of the unique keys previously configured</p></li>
+<li><p><code>name</code></p></li>
+<li><p><code>email</code></p></li>
+<li><p><code>subject</code></p></li>
+<li><p><code>message</code></p></li>
+</ul>
+</li>
+<li><p>If the mail has been successfully sent, you will get <code>success</code> as a response. Otherwise you will receive <code>fail</code>.</p></li>
+<li>In case of exceptions, you can view them in the Event Log</li>
+</ul>
 <h3><a name="Cloning" class="anchor" href="#Cloning">Cloning</a></h3>
-
 <p><code>git clone git@github.com:exira/static-mailer.git -c core.autocrlf=input</code></p>
-
 <h3><a name="Contributing-and-copyright" class="anchor" href="#Contributing-and-copyright">Contributing and copyright</a></h3>
-
 <p>The project is hosted on <a href="https://github.com/exira/static-mailer">GitHub</a> where you can <a href="https://github.com/exira/static-mailer/issues">report issues</a>, fork
 the project and submit pull requests. You might also want to read the
 <a href="https://github.com/exira/static-mailer/blob/master/README.md">library design notes</a> to understand how it works.</p>
-
 <p>For more information see the <a href="https://github.com/exira/static-mailer/blob/master/LICENSE.txt">License file</a> in the GitHub repository.</p>
 
 
